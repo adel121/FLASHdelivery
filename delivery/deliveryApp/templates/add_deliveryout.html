@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+{% block title %} FST - ADD DRIVER OUT {% endblock %}
+{% block content %}
+
+<form class="jumbotron container form-group" action="add_deliveryout" method="post">
+	<h2>Adding New Driver Out</h2>
+    {% csrf_token %}
+    {{ form }}
+    <hr>
+    <input type="submit" class="btn btn-primary" value="Add Driver Out">
+</form>
+{% endblock %}

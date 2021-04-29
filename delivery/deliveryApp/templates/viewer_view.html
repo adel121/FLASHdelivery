@@ -1,0 +1,879 @@
+{% load deliverytags %}
+<header>
+<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.css" integrity="sha512-8bHTC73gkZ7rZ7vpqUQThUDhqcNFyYi2xgDgPDHc+GXVGHXq+xPjynxIopALmOPqzo9JZj0k6OqqewdGO3EsrQ==" crossorigin="anonymous" />
+ <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.9/semantic.min.css"/>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.9/semantic.min.js"></script>
+
+<!-- CSS only -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous">
+  <style>@import url('https://fonts.googleapis.com/css2?family=Lato&display=swap');
+*{
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: 'Lato', sans-serif;
+}
+header{
+  width: 100%;
+  background-color:  #ff8000;
+}
+nav{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.logo{
+  color: yellow;
+  padding: 10px;
+  font-size: 35px;
+}
+nav ul{
+  list-style: none;
+}
+.menu > li {
+  display: inline-block;
+  padding: 10px;
+  position: relative;
+}
+.menu > li > a{
+  text-decoration: none;
+  color: white;
+  font-size: 20px;
+  padding: 10px 14px;
+}
+.menu li:hover{
+  background-color: black;
+  color: white;
+}
+/*Submenu style*/
+.submenu{
+  list-style: none;
+  background-color: green;
+  width: 140px;
+  position: absolute;
+  left: 0;
+  display: none;
+  animation: slideup .3s ease;
+}
+.submenu > li{
+  display: block;
+  padding: 10px;
+  text-align: center;
+  position: relative;
+}
+.submenu > li > a{
+  text-align: center;
+  text-decoration: none;
+  color: white;
+}
+
+.submenu li:hover{
+  background-color: black;
+  color: white;
+}
+
+/*Submenu2 style*/
+.submenu2{
+  display: none;
+  background-color: green;
+  width: 140px;
+  position: absolute;
+  left: 100%;
+  top: 0;
+  list-style: none;
+  animation: slideleft .3s ease;
+}
+
+.submenu2 li{
+  display: block;
+  padding: 10px;
+  text-align: center;
+}
+.submenu2 li a{
+  color: white;
+  text-decoration: none;
+}
+
+.submenu2 li:hover{
+  background-color: black;
+  color: white;
+}
+
+/*Submenu and Submenu2 appear on hover*/
+
+.menu > li:hover .submenu{
+  display: block;
+}
+.submenu > li:hover .submenu2{
+  display: block;
+}
+
+/*Animations*/
+@keyframes slideup {
+  0% {
+    transform: translateY(18px);
+    opacity: 0;
+  }
+  100% {
+    transform: none;
+    opacity: 1;
+  }
+}
+
+@keyframes slideleft {
+  0% {
+    transform: translateX(18px);
+    opacity: 0;
+  }
+  100% {
+    transform: none;
+    opacity: 1;
+  }
+}
+.container img{
+  width: 24px;
+  margin: 10px;
+  cursor: pointer;
+}
+  </style>
+  <nav>
+    <h1 class="logo">FST Delivery</h1>
+
+    <ul class="menu">
+      <li>Welcome {{company}} | </li>
+      <li><a href="{% url 'viewer_logout' %}">Logout</a></li>
+    </ul>
+  </nav>
+</header>
+
+<style>
+  body, html {
+  font-family: 'Source Sans Pro', sans-serif;
+}
+
+main {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+main h1 {
+  float: left;
+}
+main table {
+  background: white;
+  width: 100%;
+}
+@media (min-width: 600px) {
+  main table tr {
+    display: flex;
+    justify-content: space-evenly;
+  }
+  main table tr[property] th {
+    display: none;
+  }
+}
+@media (max-width: 599px) {
+  main table tr:first-child {
+    display: none;
+  }
+}
+main table tr:nth-child(even) {
+  background: #EEE;
+}
+main table tr.mv-deleted {
+  padding: 10px 10px;
+}
+main table tr button.mv-close {
+  padding: 4px 3px 3px;
+  margin-top: 3px;
+  margin-right: 3px;
+}
+main table tr button.mv-undo {
+  border: 1px solid #fff;
+  background: #fff;
+  padding: 7px 20px;
+  cursor: pointer;
+}
+main table tr button.mv-undo:hover {
+  background: #4CAF50;
+  color: #fff;
+}
+main table tr td, main table tr th {
+  width: 100%;
+  padding: 10px;
+}
+@media (max-width: 599px) {
+  main table tr td, main table tr th {
+    display: block;
+    text-align: center;
+    padding: 10px 0;
+    font-weight: 400 !important;
+    font-size: 18px !important;
+  }
+  main table tr th {
+    background: #fff !important;
+    color: #000 !important;
+  }
+  main table tr td:not(:first-of-type) {
+    background: #EEE;
+  }
+}
+@media (min-width: 600px) {
+  main table tr td:last-child, main table tr th:last-child {
+    max-width: 100px !important;
+  }
+}
+main table tr th {
+  background: #ff8000;
+  border: #ff8000;
+  color: #fff;
+  font-size: 18px;
+  letter-spacing: 2px;
+  font-weight: 600;
+}
+main table tr th:first-child {
+  text-align: left;
+}
+@media (min-width: 600px) {
+  main table tr td {
+    display: flex;
+    align-items: center;
+  }
+}
+@media (max-width: 599px) {
+  main table tr td:first-child {
+    background: #ff8000;
+    color: #fff;
+    font-size: 21px !important;
+  }
+}
+main table tr td:not(:first-child) {
+  justify-content: center;
+}
+main table tr td:not(:first-child) input {
+  text-align: center !important;
+}
+main table tr td input.mv-editor {
+  width: 100% !important;
+  -webkit-appearance: none !important;
+  outline: 0 !important;
+}
+main table tr td input.mv-editor:focus {
+  padding: 5px 0 !important;
+  box-shadow: none !important;
+  -webkit-box-shadow: none !important;
+  -webkit-appearance: none !important;
+}
+main table tr td.mv-item-bar.mv-ui, main table tr td.mv-item-bar.mv-ui[hidden] {
+  position: static;
+  opacity: 1;
+  width: 100%;
+  margin: 0;
+  padding: 10px;
+  box-shadow: none;
+  border-radius: 0;
+}
+@media (max-width: 599px) {
+  main table tr td.mv-item-bar.mv-ui, main table tr td.mv-item-bar.mv-ui[hidden] {
+    background: #fff;
+    padding: 15px 0;
+    display: flex;
+    justify-content: center;
+  }
+}
+main table tr td.mv-item-bar.mv-ui button, main table tr td.mv-item-bar.mv-ui[hidden] button {
+  border-radius: 0;
+  background: #fff;
+}
+main table tr td.mv-item-bar.mv-ui button:hover, main table tr td.mv-item-bar.mv-ui[hidden] button:hover {
+  border-radius: 0;
+}
+main .bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+main .bar .saved {
+  color: #ff8000;
+  font-size: 18px;
+  display: none;
+  padding-left: 35px;
+}
+main .mv-bar.mv-ui, main .mv-bar.mv-ui.mv-compact {
+  float: right;
+  margin-bottom: 25px;
+  background: transparent;
+  position: static !important;
+}
+main .mv-bar.mv-ui .mv-button, main .mv-bar.mv-ui button, main .mv-bar.mv-ui button:focus, main .mv-bar.mv-ui.mv-compact .mv-button, main .mv-bar.mv-ui.mv-compact button, main .mv-bar.mv-ui.mv-compact button:focus {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  box-shadow: none !important;
+  border: 1px solid #ff8000;
+  background: #ff8000 !important;
+  color: #fff;
+  padding: 10px 25px;
+  margin-top: 15px;
+  float: left;
+  cursor: pointer;
+  transition: all .3s;
+  margin-left: 15px;
+  text-shadow: none !important;
+}
+main .mv-bar.mv-ui .mv-button:before, main .mv-bar.mv-ui button:before, main .mv-bar.mv-ui button:focus:before, main .mv-bar.mv-ui.mv-compact .mv-button:before, main .mv-bar.mv-ui.mv-compact button:before, main .mv-bar.mv-ui.mv-compact button:focus:before {
+  display: none !important;
+}
+main .mv-bar.mv-ui .mv-button:hover, main .mv-bar.mv-ui button:hover, main .mv-bar.mv-ui button:focus:hover, main .mv-bar.mv-ui.mv-compact .mv-button:hover, main .mv-bar.mv-ui.mv-compact button:hover, main .mv-bar.mv-ui.mv-compact button:focus:hover {
+  transform: scale(1.1);
+  background: rgba(0, 0, 0, 0.2);
+}
+main .mv-bar.mv-ui .mv-button.mv-drag-handle, main .mv-bar.mv-ui button.mv-drag-handle, main .mv-bar.mv-ui button:focus.mv-drag-handle, main .mv-bar.mv-ui.mv-compact .mv-button.mv-drag-handle, main .mv-bar.mv-ui.mv-compact button.mv-drag-handle, main .mv-bar.mv-ui.mv-compact button:focus.mv-drag-handle {
+  border: none !important;
+  padding: 2px 0 0 10px !important;
+  font-size: 30px !important;
+  background: transparent !important;
+}
+.mv-add.mv-ui:not(.mv-add-row5) {
+  display: none !important;
+}
+main .mv-add-row5 {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  box-shadow: none;
+  border: 1px solid #4CAF50;
+  background: #4CAF50;
+  color: #fff;
+  padding: 14px 25px;
+  margin-top: 15px;
+  float: left;
+  cursor: pointer;
+  transition: all .3s;
+  margin-bottom: 25px;
+  font-weight: 700;
+  font-size: 15px;
+}
+.mv-bar.mv-ui {
+  padding: 0;
+}
+main .mv-add-row5:hover {
+  transform: scale(1.1);
+}
+
+[mv-app].mv-highlight-unsaved .mv-unsaved-changes {
+  box-shadow: none !important;
+  -webkit-box-shadow: none !important;
+}
+.loading {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 50%;
+    width: 100px;
+    color: #FFF;
+    margin: auto;
+    -webkit-transform: translateY(-50%);
+    -moz-transform: translateY(-50%);
+    -o-transform: translateY(-50%);
+    transform: translateY(-50%);
+}
+.loading span {
+    position: absolute;
+    height: 10px;
+    width: 84px;
+    top: 50px;
+    overflow: hidden;
+}
+.loading span > i {
+    position: absolute;
+    height: 4px;
+    width: 4px;
+    border-radius: 50%;
+    -webkit-animation: wait 4s infinite;
+    -moz-animation: wait 4s infinite;
+    -o-animation: wait 4s infinite;
+    animation: wait 4s infinite;
+}
+.loading span > i:nth-of-type(1) {
+    left: -28px;
+    background: yellow;
+}
+.loading span > i:nth-of-type(2) {
+    left: -21px;
+    -webkit-animation-delay: 0.8s;
+    animation-delay: 0.8s;
+    background: lightgreen;
+}
+
+@-webkit-keyframes wait {
+    0%   { left: -7px  }
+    30%  { left: 52px  }
+    60%  { left: 22px  }
+    100% { left: 100px }
+}
+@-moz-keyframes wait {
+    0%   { left: -7px  }
+    30%  { left: 52px  }
+    60%  { left: 22px  }
+    100% { left: 100px }
+}
+@-o-keyframes wait {
+    0%   { left: -7px  }
+    30%  { left: 52px  }
+    60%  { left: 22px  }
+    100% { left: 100px }
+}
+@keyframes wait {
+    0%   { left: -7px  }
+    30%  { left: 52px  }
+    60%  { left: 22px  }
+    100% { left: 100px }
+}
+</style>
+ <link href="https://fonts.googleapis.com/css?family=Titillium+Web&display=swap" rel="stylesheet">
+<main mv-app="table" mv-storage="local" mv-mode="edit">
+    <hr>
+   <form style="text-align:center" class="" action="{% url 'viewer_view' category date|get_year date|get_month date|get_day phone %}" method="POST" enctype="multipart/form-data" >
+  {% csrf_token %}
+  <label class="form-label" for="customFile">Only CSV format is allowed</label>
+<input type="file" name="file" class="form-control" id="customFile" required />
+<br>
+  <input type="submit" value="Upload File" onclick="saywait()" class="btn btn-secondary">
+ </form>
+ <div class="loading" id="waitplease">
+            <p>Please wait</p>
+            <span><i></i><i></i></span>
+        </div>
+ <hr>
+
+  <div class="container jumbotron" style="background: #ff8000; width:100%; margin-top: 20px;">
+{% if result != 'nothing' %}
+<h1 style="color:white; text-align:center">
+{{result}}
+</h1>
+{% endif %}
+<p align="right" style="color:white">total # of displayed bills:&nbsp{{bills.paginator.count}}&nbspbills
+<br>
+total # of displayed pages:&nbsp{{pages}}&nbsppages
+
+
+    <form style="text-align:right" method="POST" class="form-group">
+    {% csrf_token %}
+<div class="ui action input">
+  <input name="requested_id" type="text" placeholder="Search By Id">
+  <button class="ui button" type="submit">Search</button>
+</div>
+</form>
+
+<ol class="list-group">
+  <form class="form-group" style="align:center" action="{% url 'viewer_view' %}" method="POST">
+  {% csrf_token %}
+   <div style="color:white"> <h2 >Filter Section: </h2> </div>
+<label for="requested_date" style="color:white;"><h2>Import Date </h2></label>
+
+    <input class="form-control" id="requested_date"  type="date" name="requested_date" {% if date == '0-0-0' %} value="No Date Specified" {% else %} value={{date|to_str}} {% endif %}>
+    <hr>
+
+     <label for="requested_phone" style="color:white;"><h3 >End-Client Phone  <h5> hint:(To view all bills with all phone numbers, enter: 0)</h5> </h3> </label>
+    <input class="form-control" id="requested_phone" type="text" name="requested_phone" {% if phone == '0' %} value="All Phone Numbers" {% else %} value={{phone}} {% endif %}>
+    <hr>
+
+    <input style="align-self: center" type="submit" class="btn btn-light" value="Filter By Date In and Phone Number">
+
+</form>
+
+{% if bills.has_other_pages %}
+
+    <form method="POST" style="text-align: center" class="form-group" action="{% url 'viewer_view' category date|get_year date|get_month date|get_day phone %}">
+    {% csrf_token %}
+  <select class="ui search dropdown" name="page">
+
+    {% for i in bills.paginator.page_range %}
+      {% if bills.number == i %}
+       <option selected value="{{i}}"><span class="sr-only">Page: {{i}}</span></option>
+
+      {% else %}
+      <option  value="{{i}}">Page: {{i}}</span></option>
+
+      {% endif %}
+    {% endfor %}
+    </select> &nbsp &nbsp
+    <button type="submit" value="Navigate" class="btn btn-light">Change Page</button>
+</form>
+    <script type="text/javascript">
+          jQuery('.ui.search.dropdown')
+            .dropdown();
+            </script>
+
+{% endif %}
+
+<h3 style="color:white; margin-left:25%">View:
+<a href="{% url 'viewer_view' 'all' date|get_year date|get_month date|get_day phone %}"> <button type="button" class="btn btn-light">All</button></a>
+<a href="{% url 'viewer_view' 'pending' date|get_year date|get_month date|get_day phone %}"> <button type="button" class="btn btn-light">Pending</button></a>
+<a href="{% url 'viewer_view' 'sent' date|get_year date|get_month date|get_day phone %}"> <button type="button" class="btn btn-light">Sent</button></a>
+<a href="{% url 'viewer_view' 'received' date|get_year date|get_month date|get_day  phone%}"> <button type="button" class="btn btn-light">Received</button></a>
+<hr>
+</h3>
+  </div>
+  <h1></h1>
+  <table>
+
+    <tr>
+      <th id="breed">ID</th>
+      <th id="affectionLevel">Product Price</th>
+      <th id="energyLevel">Delivery Cost</th>
+      <th> End-Client Name</th>
+      <th> End-Client Phone Number</th>
+      <th> Address </th>
+      <th colspan="3"> Directions</th>
+      <th> Import Date </th>
+      <th id="friendliness">Date Sent</th>
+      <th> Type</th>
+      <th id="intelligence">Status</th>
+      <th></th>
+    </tr>
+
+    {% for bill in bills %}
+    <tr property="row" mv-multiple>
+      <td>{{bill.Bill_Id}}</td>
+      <td>{{bill.Product_cost}}{% if bill.Currency == 'usd' %} $ {% else %} L.L {% endif  %}</td>
+      <td>{{bill.Delivery_cost}} L.L.</td>
+      <td> {{bill.endClientName}}</td>
+      <td> {{bill.endClientNumber}}</td>
+      <td> {{bill.address}} </td>
+      <td> {{bill.directions}}</td>
+      <td> {{bill.Date_In}} </td>
+      <td>{% if bill.Status != "pending" %} {{bill.Date_Sent}} {% else %} Not Sent Yet {% endif %}</td>
+      <td> {{bill.Notes}}</td>
+      <td> {% if bill.Status == 'paid' %} received {% else %} {{bill.Status}}{% endif %}</td>
+      <td></td>
+    </tr>
+    {% endfor %}
+
+  </table>
+
+</main>
+
+<script>
+$('#waitplease').toggle();
+function saywait() {
+    var s=document.getElementById("waitplease");
+    if( document.getElementById("customFile").files.length == 0 ) return;
+    $(s).toggle();
+}
+  $('.mv-save').on('click', function() {
+  $('.saved').fadeIn().delay(3000).fadeOut();
+});
+
+function mobileViewUpdate() {
+    var viewportWidth = $(window).width();
+    if (viewportWidth < 600) {
+      $('td:not([property="breed"])').each(function(event) {
+        header = $(this).attr('property')
+
+        if(! $(this).parent().find('#' + header).length) {
+          $('#' + header).clone().insertBefore(this);
+        }
+      });
+    }
+}
+
+$(window).on('load resize', mobileViewUpdate);
+  </script>
+  <div class="container text-center" style="width:100%; align-items:center;margin-bottom:0px;">
+<footer>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<style>
+.fa {
+  padding: 20px;
+  font-size: 30px;
+  width: 50px;
+  text-align: center;
+  text-decoration: none;
+  margin: 5px 2px;
+
+}
+
+.fa:hover {
+    opacity: 0.7;
+}
+
+.fa-facebook {
+  background: #3B5998;
+  color: white;
+}
+
+.fa-twitter {
+  background: #55ACEE;
+  color: white;
+}
+
+.fa-google {
+  background: #dd4b39;
+  color: white;
+}
+
+.fa-linkedin {
+  background: #007bb5;
+  color: white;
+}
+
+.fa-youtube {
+  background: #bb0000;
+  color: white;
+}
+
+.fa-instagram {
+  background: #125688;
+  color: white;
+}
+
+.fa-pinterest {
+  background: #cb2027;
+  color: white;
+}
+
+.fa-snapchat-ghost {
+  background: #fffc00;
+  color: white;
+  text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
+}
+
+.fa-skype {
+  background: #00aff0;
+  color: white;
+}
+
+.fa-android {
+  background: #a4c639;
+  color: white;
+}
+
+.fa-dribbble {
+  background: #ea4c89;
+  color: white;
+}
+
+.fa-vimeo {
+  background: #45bbff;
+  color: white;
+}
+
+.fa-tumblr {
+  background: #2c4762;
+  color: white;
+}
+
+.fa-vine {
+  background: #00b489;
+  color: white;
+}
+
+.fa-foursquare {
+  background: #45bbff;
+  color: white;
+}
+
+.fa-stumbleupon {
+  background: #eb4924;
+  color: white;
+}
+
+.fa-flickr {
+  background: #f40083;
+  color: white;
+}
+
+.fa-yahoo {
+  background: #430297;
+  color: white;
+}
+
+.fa-soundcloud {
+  background: #ff5500;
+  color: white;
+}
+
+.fa-reddit {
+  background: #ff5700;
+  color: white;
+}
+
+.fa-rss {
+  background: #ff6600;
+  color: white;
+}
+.fa-whatsapp {
+  background: #74b816;
+  color: white;
+}
+.fa-envelope {
+  background: blue;
+  color: white;
+}
+</style>
+
+
+
+<style>
+h1 {font-size:1em;margin-bottom:55px;}
+
+#social-platforms {
+  position:relative;
+  top:100px;
+  top:25vh;
+  font-size:1rem;
+  text-align:center;
+  height:250px;
+  overflow:hidden;
+}
+
+/*Pen code from this point on*/
+.btn {
+  clear:both;
+  white-space:nowrap;
+  font-size:.8em;
+  display:inline-block;
+  border-radius:5px;
+  box-shadow: 0 1px 5px 0 rgba(0, 0, 0, 0.35);
+  margin:2px;
+  -webkit-transition:all .5s;
+  -moz-transition:all .5s;
+  transition:all .5s;
+  overflow:hidden
+}
+
+.btn:hover {
+  box-shadow: 0 5px 15px 0 rgba(0, 0, 0, 0.45);
+}
+
+.btn:focus {
+  box-shadow: 0 3px 10px 0 rgba(0, 0, 0, 0.4);
+}
+
+.btn > span,.btn-icon > i {
+  float:left;
+  padding:13px;
+  -webkit-transition:all .5s;
+  -moz-transition:all .5s;
+  transition:all .5s;
+  line-height:1em
+}
+
+.btn > span {
+  padding:14px 18px 16px;
+  white-space:nowrap;
+  color:#FFF;
+  background:#b8b8b8
+}
+
+.btn:focus > span {
+  background:#9a9a9a
+}
+
+.btn-icon > i {
+  border-radius:5px 0 0 5px;
+  position:relative;
+  width:13px;
+  text-align:center;
+  font-size:1.25em;
+  color:#fff;
+  background:#212121
+}
+
+.btn-icon > i:after {
+  content:"";
+  border:8px solid;
+  border-color:transparent transparent transparent #222;
+  position:absolute;
+  top:13px;
+  right:-15px
+}
+
+.btn-icon:hover > i,.btn-icon:focus > i {
+  color:#FFF
+}
+
+.btn-icon > span {
+  border-radius:0 5px 5px 0
+}
+
+/*Facebook*/
+.btn-facebook:hover > i,.btn-facebook:focus > i {
+  color:#3b5998
+}
+
+.btn-facebook > span {
+  background:#3b5998
+}
+
+/*Twitter*/
+.btn-twitter:hover > i,.btn-twitter:focus > i {
+  color:#55acee
+}
+
+.btn-twitter > span {
+  background:#55acee
+}
+
+/*Google*/
+.btn-googleplus:hover > i,.btn-googleplus:focus > i {
+  color:#dd4b39
+}
+
+.btn-googleplus > span {
+  background:#dd4b39
+}
+
+/*Pinterest*/
+.btn-pinterest:hover > i,.btn-pinterest:focus > i {
+  color:#cb2028
+}
+
+.btn-whatsapp:hover > i,.btn-whatsapp:focus > i {
+  background:#74b816
+}
+.btn-whatsapp > span {
+  background:#74b816
+}
+
+.btn-pinterest > span {
+  background:#cb2028
+}
+
+/*LinkedIn*/
+.btn-linkedin:hover > i,.btn-linkedin:focus > i {
+  color:#007bb6
+}
+
+.btn-linkedin > span {
+  background:#007bb6
+}
+
+</style>
+
+<div id="social-platforms">
+<a class="btn btn-icon btn-facebook" href="https://www.facebook.com/adel.hhasan.7/"><i class="fa fa-facebook"></i><span>Facebook</span></a>
+<a class="btn btn-icon btn-whatsapp" href="http://wa.link/9emvah"><i class="fa fa-whatsapp"></i><span>Whatsapp</span></a>
+<a class="btn btn-icon btn-linkedin" href="https://www.linkedin.com/in/adel-haj-hassan-3125391a7/"><i class="fa fa-linkedin"></i><span>LinkedIn</span></a>
+</div>
+
+
+
+      <p class="about" style="text-align: center"> &nbsp; <br><br><br>
+    <!--  <a href="https://www.facebook.com/adel.hhasan.7/" class="fa fa-facebook"></a>
+            <a href="http://wa.link/9emvah" class="fa fa-whatsapp"></a>
+            <a href="https://www.linkedin.com/in/adel-haj-hassan-3125391a7/" class="fa fa-linkedin"></a>-->
+      <p  style="text-align: center">&#169; Copyright 2021 - 2021 Eng. Adel Haj Hassan &nbsp;</p>
+      <p  style="text-align: center">Email: adel_hajhasan@hotmail.com</p>
+      <p  style="text-align: center">Phone: +961 70 787463</p>
+    </footer>
+</div>

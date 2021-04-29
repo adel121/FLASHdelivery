@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% block title %}FST - LOGIN{% endblock %}
+{% block notlogin %}
+{% endblock %}
+{% block login %}
+<div class="jumbotron container" style="margin-top: 30px; background-color: : #4CAF50;">
+<h2>Log In</h2>
+<form method="post">
+  {% csrf_token %}
+
+  {{ form.as_p }}
+  <hr>
+ <p align="center"><button type="submit" class="btn btn-primary">Log In</button></p>
+</form>
+</div>
+<script>
+	$("#id_username").addClass("form-control");
+	$("#id_password").addClass("form-control");
+</script>
+{% endblock %}
+

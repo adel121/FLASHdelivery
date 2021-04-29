@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% block title %} FST - LOGIN {% endblock %}
+{% block content %}
+{% load deliverytags %}
+<br><br>
+<form action="{% url 'login' %}" method="POST" class="container jumbotron">
+<h4 style="color:red;">{{message}}</h4>
+{% csrf_token %}
+{{form}}
+<br>
+<input type="submit" class="btn btn-primary" value="Enter System">
+</form>
+
+{% endblock %}

@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% block title %} FST - DEL_IN DELETE{% endblock %}
+{% block content %}
+
+<div style="margin-top: 10px">
+<div style="align-content: center;" class="container jumbotron">
+<form method="post" class="form-group">{% csrf_token %}
+    <h1>Are you sure you want to delete the Delivery In: "{{ object }}"?</h1>
+     <h1 style="color:red"> Attention: All bills brought by {{ object }} will be removed!!</h1>
+
+    <hr><br><br>
+     <a href="{% url 'delivery_in_details' object.pk %}">
+    <input type="button" style="width:100%" class="btn btn-primary" value="Cancel Operation">
+</a>
+    <hr>
+    <input type="submit" style="width:100%" class="btn btn-danger" value="Confirm">
+</form>
+</div>
+</div>
+{% endblock %}

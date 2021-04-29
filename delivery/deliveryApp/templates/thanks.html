@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+{% block title %} FST - THANK YOU {% endblock %}
+{% block content %}
+<div style="text-align: center; margin-top:5px" class="jumbotron container">
+<h3> {{Message}} </h3>
+<hr>
+<h3>
+<a href="{% url 'index' %}">Return to Home Page</a>
+</div>
+{% endblock %}
+
+

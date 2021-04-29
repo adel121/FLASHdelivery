@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% block title %} FST - FIND CLIENT {% endblock %}
+{% block content %}
+
+{% load deliverytags %}
+<br><br>
+<form action="{% url 'find_client' %}" method="POST" class="container jumbotron">
+	<h1> Select Supplier From The List Below:</h1>
+{% csrf_token %}
+	<select class="ui search dropdown fluid" name="client" >
+			<option value="intro" selected disabled hidden>Search by typing the name</option>
+					{% for client in clients %}
+
+ 					 <option  value="{{client.pk}}">{{client.Company}}</option>
+
+ 					 {% endfor %}
+					</select>
+					<script type="text/javascript">
+					jQuery('.ui.search.dropdown')
+  					.dropdown();
+  					</script>
+<br>
+<input type="submit" class="btn btn-primary" value="View Supplier">
+</form>
+
+{% endblock %}

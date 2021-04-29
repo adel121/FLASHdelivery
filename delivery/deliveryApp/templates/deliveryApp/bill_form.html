@@ -1,0 +1,134 @@
+{% extends 'base.html' %}
+{% block title %} FST - BILL UPDATE{% endblock %}
+{% block content%}
+<div style="margin-top: 10px">
+
+<div style="align-content: center">
+<form method="post" class="container jumbotron" style="align-content: center">
+	<h1 style="text-align: center">Edit Bill</h1>
+    {% csrf_token %}
+
+    {{ form.as_p }}
+    <input type="submit" class="btn btn-primary" value="Save Changes">
+    <script>$("label").remove();  	
+     </script>
+    
+</form>
+</div>
+</div>
+<script>
+var elem = document.createElement('p');
+elem.innerText = 'Bill Id:';
+var target = document.querySelector('#id_Bill_Id');
+target.parentNode.insertBefore(elem, target);
+$("#id_Bill_Id").addClass("form-control");
+
+elem = document.createElement('p');	
+elem.innerText = 'Date In:';
+target = document.querySelector('#id_Date_In');
+target.parentNode.insertBefore(elem, target);
+$("#id_Date_In").addClass("form-control");
+
+
+elem = document.createElement('p');	
+elem.innerText = 'Currency:';
+target = document.querySelector('#id_Currency');
+target.parentNode.insertBefore(elem, target);
+$("#id_Currency").addClass("form-control");
+	
+elem = document.createElement('p');	
+elem.innerText = 'Date Sent:';
+target = document.querySelector('#id_Date_Sent');
+target.parentNode.insertBefore(elem, target);
+$("#id_Date_Sent").addClass("form-control");
+
+elem = document.createElement('p');	
+elem.innerText = 'Address:';
+target = document.querySelector('#id_address');
+target.parentNode.insertBefore(elem, target);
+$("#id_address").addClass("form-control");
+	
+elem = document.createElement('p');	
+elem.innerText = 'Driver out:';
+target = document.querySelector('#id_delivery_out');
+target.parentNode.insertBefore(elem, target);
+$("#id_delivery_out").addClass("form-control");
+	
+elem = document.createElement('p');	
+elem.innerText = 'Customer Name:';
+target = document.querySelector('#id_endClientName');
+target.parentNode.insertBefore(elem, target);
+$("#id_endClientName").addClass("form-control");
+
+elem = document.createElement('p');	
+elem.innerText = 'Customer Number:';
+target = document.querySelector('#id_endClientNumber');
+target.parentNode.insertBefore(elem, target);
+$("#id_endClientNumber").addClass("form-control");
+
+elem = document.createElement('p');	
+elem.innerText = 'Supplier:';
+target = document.querySelector('#id_client');
+target.parentNode.insertBefore(elem, target);
+$("#id_client").addClass("form-control");
+
+elem = document.createElement('p');	
+elem.innerText = 'Order Amount:';
+target = document.querySelector('#id_Product_cost');
+target.parentNode.insertBefore(elem, target);
+$("#id_Product_cost").addClass("form-control");
+
+
+elem = document.createElement('p');	
+elem.innerText = 'Delivery Charge:';
+target = document.querySelector('#id_Delivery_cost');
+target.parentNode.insertBefore(elem, target);
+$("#id_Delivery_cost").addClass("form-control");
+
+
+elem = document.createElement('p');	
+elem.innerText = 'Status:';
+target = document.querySelector('#id_Status');
+target.parentNode.insertBefore(elem, target);
+$("#id_Status").addClass("form-control");
+
+elem = document.createElement('p');	
+elem.innerText = 'Extracted For Driver Out:';
+target = document.querySelector('#id_Extracted_For_DelOut');
+target.parentNode.insertBefore(elem, target);
+
+
+
+elem = document.createElement('p');	
+elem.innerText = 'Done Refunding:';
+target = document.querySelector('#id_Done_Refunding');
+target.parentNode.insertBefore(elem, target);
+
+elem = document.createElement('p');	
+elem.innerText = 'Done:';
+target = document.querySelector('#id_Done');
+target.parentNode.insertBefore(elem, target);
+	
+
+	
+	$("#id_Currency").val("lbp");
+
+
+
+</script>
+{% endblock %}
+ <!--name="Id"
+ name="Date"
+ name="Date_In"
+ name="Date_Sent"
+ name="Done"
+ name="address"
+ name="delivery_in"
+ name="delivery_out"
+ name="endClientName"
+ name="endClientNumber"
+ name="manager"
+ name="client"
+ name="Product_cost"
+ name="Delivery_cost"
+ name="Status" id="id_Status">-->

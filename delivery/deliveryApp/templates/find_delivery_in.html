@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% block title %} FST - FIND DEL IN {% endblock %}
+{% block content %}
+{% load deliverytags %}
+<br><br>
+<form action="{% url 'find_delivery_in' %}" method="POST" class="container jumbotron">
+{% csrf_token %}
+	<select class="ui search dropdown fluid" name="deliveryin" >
+			<option value="intro" selected disabled hidden>Search by typing the name</option>
+					{% for deliveryin in deliveryins %}
+ 						{% if deliveryout.Name != 'Default' %}
+ 					 <option  value="{{deliveryin.pk}}">{{deliveryin.Name}}</option>
+                        {% endif %}
+ 					 {% endfor %}
+					</select>
+					<script type="text/javascript">
+					jQuery('.ui.search.dropdown')
+  					.dropdown();
+  					</script>
+<br>
+<input type="submit" class="btn btn-primary" value="View Delivery In">
+</form>
+
+{% endblock %}

@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+{% block title %} FST - DEL_OUT UPDATE{% endblock %}
+{% block content%}
+<div style="margin-top: 10px">
+
+<div style="align-content: center">
+<form method="post" class="container jumbotron" style="align-content: center">
+	<h1 style="text-align: center"> Editing Driver Out: {{object.Name}}</h1>
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input type="submit" class="btn btn-primary" value="Save Changes">
+</form>
+</div>
+</div>
+<script>
+	$("#id_Name").addClass("form-control");
+	$("#id_Phone").addClass("form-control");
+</script>
+{% endblock %}
+ <!--name="Id"
+ name="Date"
+ name="Date_In"
+ name="Date_Sent"
+ name="Done"
+ name="address"
+ name="delivery_in"
+ name="delivery_out"
+ name="endClientName"
+ name="endClientNumber"
+ name="manager"
+ name="client"
+ name="Product_cost"
+ name="Delivery_cost"
+ name="Status" id="id_Status">-->

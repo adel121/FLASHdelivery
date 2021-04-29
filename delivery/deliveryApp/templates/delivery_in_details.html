@@ -1,0 +1,392 @@
+{% extends "base.html" %}
+{% load deliverytags %}
+{% block title %} FST - DEL IN DETAILS {% endblock %}
+{% block content %}
+<div  style="align-items:center">
+</div>
+
+ <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<div  style="align-items:center">
+</div>
+
+<div class="container jumbotron list-group-item-danger" style="color:black; margin-bottom:15px; font-size:20px; width:100% ; background-color:#0d6efd!important; margin-top:15px ">
+
+<ol class="list-group">
+    <h3 style="color:white; text-align: center">Delivery In Name: {{ delivery_in.Name }}
+
+<br> Phone: {{ delivery_in.Phone }}
+<br> {% if  monthly_info != '' %} Bills brought during the month # {{date|get_month}} : {{monthly_info}} bills {% endif %}
+</h3>
+	<form class="form-group" style="align:center" action="{% url 'delivery_in_details' delivery_in.pk %}" method="POST">
+	{% csrf_token %}
+    <label for="requested_date" style="color:white;"><h3 >Date In</h3> <h5> </h5></label>
+    <input class="form-control" id="requested_date" type="date" name="requested_date" {% if date == '0-0-0' %} value="No Date Specified" {% else %} value={{date|to_str}} {% endif %}>
+    <hr>
+    <input style="align-self: center" type="submit" class="btn btn-light" value="Filter By Date">
+</form>
+<p align="right"><a href="{% url 'delivery_in_details' delivery_in.pk  %}"><button  class="btn btn-light">View Unfinished Bills</button> </a></p>
+
+{% if date != '0-0-0' %}
+  <p align="right"><a href="{% url 'extract_delivery_in_report' delivery_in.pk date|get_year date|get_month date|get_day %}"> <button  class="btn btn-light">
+  Extract Report As Excel
+</button></a></p>
+{% endif %}
+<p align="left">
+<a href="{% url 'delete_delivery_in' delivery_in.pk  %}"><button  class="btn btn-danger">Delete Delivery In</button> </a>
+
+<a href="{% url 'updatedeliveryin' delivery_in.pk %}"><button class="btn btn-light">
+Edit Delivery In</button></a>
+</p>
+<div style="text-align:right">
+    <form method="POST" action="{% url 'delivery_in_details' delivery_in.pk date|get_year date|get_month date|get_day %}">
+    <input type="text" name="IDS" id="IDS" hidden value="">
+    {% csrf_token %}
+
+    <input type="submit" id="submit" hidden>
+</form><button class="btn btn-warning" value="Print" onclick="Print()"> Print </button></div>
+
+<ul>
+
+
+
+{% if date != '0-0-0' %}
+ <h2 style="color:white; text-align:center">This is a list of <u><i><b>All</b></i></u> bills related to {{delivery_in.Name}} on {{date}}</h2>
+                {% for sts in bills %}
+
+                {% if sts.Date_In|to_date == date|to_str %}
+
+                 {{client}}
+                 {% if sts.Status == 'refunded' %}
+
+                <li name="{{sts.Bill_Id}}_item" class="list-group-item " style="text-align: center; background: yellow">
+                     <p style="text-align:left">Include: <input type="checkbox" class="pl" name="{{sts.Bill_Id}}"></p>
+	<a
+                    href="{% url 'bill_details' sts.Bill_Id sts.Status  %}"
+                    >ID: {{sts.Bill_Id}}   <div name="{{sts.Bill_Id}}_date">Address: {{sts.address}}, Total Price: {% if sts.Currency != 'usd' %}{{ sts.Product_cost | add:sts.Delivery_cost }} L.L {% else %}  {{ sts.Product_cost }} $ + {{sts.Delivery_cost}} L.L{% endif %}</div>
+                <div id="{{sts.Bill_Id}}_status" >Status: {{sts.Status}} </div></a>
+                {% if sts.Done_Refunding %} <h5 style="color:green">Done Refunding</h5>
+                {% else %}
+                <h5 id="{{sts.Bill_Id}}_notdonerefunding" style="color:red">Refunding Not Done Yet</h5>
+               <!-- <a name="{{sts.Bill_Id}}" class="done_refunding" ><button onclick="behave()" name="donerefunding" type="button" id="{{sts.Bill_Id}}_donerefundingbutton" class="btn btn-danger">Done Refunding?</button></a>-->
+                {% endif %}
+                <div style="margin-right: 0px;padding-top:5px">
+                </div>
+                </li>
+
+
+                {% else %}
+
+
+
+
+                <li name="{{sts.Bill_Id}}_item" class="list-group-item " style="text-align: center">
+                     <p style="text-align:left">Include: <input type="checkbox" class="pl" name="{{sts.Bill_Id}}"></p>
+
+	<a
+                    href="{% url 'bill_details' sts.Bill_Id sts.Status  %}"
+                    >ID: {{sts.Bill_Id}}   <div name="{{sts.Bill_Id}}_date">Address: {{sts.address}},Total Price: {% if sts.Currency != 'usd' %}{{ sts.Product_cost | add:sts.Delivery_cost }} L.L {% else %}  {{ sts.Product_cost }} $ + {{sts.Delivery_cost}} L.L{% endif %}</div>
+                <div id="{{sts.Bill_Id}}_status" >Status: {{sts.Status}} </div></a>
+
+                {% if sts.Done %}
+                <h5 name="{{sts.Bill_Id}}_done" style="color: green"> Done </h5>
+                {% else %}
+                <h5 id="{{sts.Bill_Id}}_notdone" style="color: red"> Not Done Yet </h5>
+
+                {% if sts.Status != 'pending' %}
+              <a name="{{sts.Bill_Id}}" class="done"  > <button onclick="behave()" name="donerefunding" id="{{sts.Bill_Id}}_donebutton" type="button" class="btn btn-danger">Done?<br></button></a>
+                {% else %}
+                <span id="done_{{sts.Bill_Id}}"></span>
+                {% endif %}
+                {% endif %}
+
+
+                <div style="margin-right: 0px;padding-top:5px">
+                {% if sts.Status == "pending"  %}
+                <div id="deliveryout_{{sts.Bill_Id}}">
+          <label for="deliveryout">Choose Driver Out:</label><br>
+             <select class="ui search dropdown"   id="selectdeliveryout_{{sts.Bill_Id}}" >
+                <option value="intro" selected disabled hidden>Search by typing the name</option>
+              {% for deliveryout in deliveryouts %}
+            {% if deliveryout.Name != 'Default' %}
+ 						 <option  value="{{deliveryout.pk}}">{{deliveryout.Name}}</option>
+                        {% endif %}
+           {% endfor %}
+          </select><br><br></div>
+          <script type="text/javascript">
+          jQuery('.ui.search.dropdown')
+            .dropdown();
+            </script></div>
+                <a name="{{sts.Bill_Id}}" class="sent" id="sent_{{sts.Bill_Id}}"> <button onclick="behave()" name="sent" type="button" id="{{sts.Bill_Id}}_sentbutton" class="btn btn-warning">Sent? </button></a>
+                {% elif sts.Status == "sent" %}
+                <a name="{{sts.Bill_Id}}" class="paid" id="paid_{{sts.Bill_Id}}"> <button id="{{sts.Bill_Id}}_paidbutton" type="button" onclick="behave()" name="paid" class="btn btn-info">Paid? </button></a>
+
+
+
+                {% endif %}
+                {% endif %}
+
+
+                </li>
+
+                {% endif %}
+                {% endfor %}
+
+{% else %}
+<h2 style="color:white; text-align:center">This is a list of bills related to {{delivery_in.Name}} that are <u><i><b>Not Finished Yet</b></i></u></h2>
+
+                {% for sts in bills %}
+
+                    {% if not sts.Done or sts.status == 'refunded' %}
+          {% if not sts.Done_Refunding %}
+
+
+           {% if sts.Status == 'refunded' %}
+
+                    <li name="{{sts.Bill_Id}}_item" class="list-group-item " style="text-align: center; background: yellow">
+                         <p style="text-align:left">Include: <input type="checkbox" class="pl" name="{{sts.Bill_Id}}"></p>
+
+                        <a
+                        href="{% url 'bill_details' sts.Bill_Id sts.Status  %}"
+                        >ID: {{sts.Bill_Id}}   <div name="{{sts.Bill_Id}}_date">Address: {{sts.address}},Total Price: {% if sts.Currency != 'usd' %}{{ sts.Product_cost | add:sts.Delivery_cost }} L.L {% else %}  {{ sts.Product_cost }} $ + {{sts.Delivery_cost}} L.L{% endif %}</div>
+                    <div id="{{sts.Bill_Id}}_status" >Status: {{sts.Status}} </div></a>
+                    {% if sts.Done_Refunding %} <h5 style="color:green">Done Refunding</h5>
+                    {% else %}
+                    <h5 id="{{sts.Bill_Id}}_notdonerefunding" style="color:red">Refunding Not Done Yet</h5>
+                 <!--   <a name="{{sts.Bill_Id}}" class="done_refunding" ><button onclick="behave()" name="donerefunding" type="button" id="{{sts.Bill_Id}}_donerefundingbutton" class="btn btn-danger">Done Refunding?</button></a>-->
+                    {% endif %}
+                    <div style="margin-right: 0px;padding-top:5px">
+                    </div>
+                    </li>
+
+
+                    {% else %}
+
+
+
+
+                    <li name="{{sts.Bill_Id}}_item" class="list-group-item " style="text-align: center">
+                         <p style="text-align:left">Include: <input type="checkbox" class="pl" name="{{sts.Bill_Id}}"></p>
+
+                        <a
+                        href="{% url 'bill_details' sts.Bill_Id sts.Status  %}"
+                        >ID: {{sts.Bill_Id}}   <div name="{{sts.Bill_Id}}_date">Address: {{sts.address}},Total Price: {% if sts.Currency != 'usd' %}{{ sts.Product_cost | add:sts.Delivery_cost }} L.L {% else %}  {{ sts.Product_cost }} $ + {{sts.Delivery_cost}} L.L{% endif %}</div>
+                    <div id="{{sts.Bill_Id}}_status" >Status: {{sts.Status}} </div></a>
+
+                    {% if sts.Done %}
+                    <h5 name="{{sts.Bill_Id}}_done" style="color: green"> Done </h5>
+                    {% else %}
+                    <h5 id="{{sts.Bill_Id}}_notdone" style="color: red"> Not Done Yet </h5>
+
+                    {% if sts.Status != 'pending' %}
+                    <a name="{{sts.Bill_Id}}" class="done"  > <button onclick="behave()" name="done" id="{{sts.Bill_Id}}_donebutton" type="button" class="btn btn-danger">Done?<br></button></a>
+                    {% else %}
+                    <span id="done_{{sts.Bill_Id}}"></span>
+                    {% endif %}
+                    {% endif %}
+
+
+                    <div style="margin-right: 0px;padding-top:5px">
+                    {% if sts.Status == "pending"  %}
+                    <div id="deliveryout_{{sts.Bill_Id}}">
+          <label for="deliveryout">Choose Driver Out:</label><br>
+             <select class="ui search dropdown"   id="selectdeliveryout_{{sts.Bill_Id}}" >
+                <option value="intro" selected disabled hidden>Search by typing the name</option>
+              {% for deliveryout in deliveryouts %}
+            {% if deliveryout.Name != 'Default' %}
+ 						 <option  value="{{deliveryout.pk}}">{{deliveryout.Name}}</option>
+                        {% endif %}
+           {% endfor %}
+          </select><br><br></div>
+          <script type="text/javascript">
+          jQuery('.ui.search.dropdown')
+            .dropdown();
+            </script></div>
+                    <a name="{{sts.Bill_Id}}" class="sent" id="sent_{{sts.Bill_Id}}"> <button onclick="behave()" name="sent" type="button" id="{{sts.Bill_Id}}_sentbutton" class="btn btn-warning">Sent? </button></a>
+                    {% elif sts.Status == "sent" %}
+                    <a name="{{sts.Bill_Id}}" class="paid" id="paid_{{sts.Bill_Id}}"> <button id="{{sts.Bill_Id}}_paidbutton" type="button" onclick="behave()" name="paid" class="btn btn-info">Paid? </button></a>
+
+
+
+                    {% endif %}
+                    {% endif %}
+
+
+                    </li>
+                    {% endif %}
+                    {% endif %}
+
+                    {% endfor %}
+{% endif %}
+
+
+</div>
+</ul>
+
+
+<hr>
+
+</ol>
+</div>
+<!--
+{% if date != '0-0-0' %}
+
+ <form class="form-group" action="{% url 'extract_delivery_in_report' delivery_in.pk date|get_year date|get_month date|get_day %}" method="POST">
+  {% csrf_token %}
+<input type="submit" style="width: 100%;" class="btn btn-primary" value="extract delivery in report">
+ </form>
+{% endif %}
+</div>
+
+
+
+-->
+
+
+
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+<script>
+
+function Print() {
+var markedCheckbox = document.getElementsByClassName('pl');
+
+var str = "";
+  for (var checkbox of markedCheckbox) {
+
+    if (checkbox.checked)
+    {
+      if (str != "") str=str+"-";
+      str=str+checkbox.name;
+
+  }
+
+  }
+if (str == "") alert("Nothing selected to print");
+else {
+document.getElementById("IDS").value=str;
+document.getElementById("submit").click();
+}
+}
+// AJAX CALL
+
+
+function behave() {
+  var name=$(event.srcElement).attr("name");
+  if (name=="sent") {
+    var id = (event.srcElement.id).replace("_sentbutton","");
+    var e = document.getElementById("selectdeliveryout_"+id);
+    var strUser = e.value;
+    if (strUser == "intro") {
+    alert("You have to choose a driver out");
+    return 0;
+    }
+
+    $.ajax({
+             type: "POST",
+             url: "{% url 'delivery_in_details' delivery_in.pk date|get_year date|get_month date|get_day %}",
+             data: {'content_id': id,'operation':'sent','deliveryout':strUser,'csrfmiddlewaretoken': '{{ csrf_token }}'},
+             dataType: "json",
+             success: function(response) {
+
+              selector=document.getElementById(response.Id);
+              $(selector).text("Paid?");
+              $(selector).attr({class:'btn btn-info'});
+              selector=document.getElementById(response.statusid);
+              selector.innerText= "Status: sent";
+              selector=document.getElementById("sent_"+response.billid);
+            $(selector).attr("class", "paid");
+
+          $(selector).attr("id","paid_"+response.billid);
+          selector=document.getElementById(response.billid+"_sentbutton");
+          $(selector).attr("id",response.billid+"_paidbutton");
+          $(selector).attr("name", "paid");
+          selector=document.getElementById("deliveryout_"+id);
+          $(selector).remove();
+
+              }
+
+
+
+        });
+
+    }
+
+  else if (name=="paid") {
+    var id = (event.srcElement.id).replace("_paidbutton","");
+    $.ajax({
+             type: "POST",
+             url: "{% url 'delivery_in_details' delivery_in.pk date|get_year date|get_month date|get_day %}",
+             data: {'content_id': id,'operation':'paid','csrfmiddlewaretoken': '{{ csrf_token }}'},
+             dataType: "json",
+             success: function(response) {
+
+              selector=document.getElementById(response.Id);
+              $(selector).text("Bill Already Paid");
+              $(selector).attr({class:'btn btn-success'});
+              selector=document.getElementById(response.statusid);
+              selector.innerText= "Status: paid";
+              selector=document.getElementById("paid_"+response.billid);
+            $(selector).attr("class", "noclass");
+          $(selector).attr("id","");
+          selector=document.getElementById(response.billid+"_paidbutton");
+          $(selector).attr("id","");
+          $(selector).remove();
+         // selector=document.getElementById("done_"+response.billid);
+          //selector.innerHTML= '<a onclick="behave()" name="'+response.billid+'" class="done"  > <button name="done" id="'+response.billid+'_donebutton" type="button" class="btn btn-danger">Done?<br></button></a>';
+              }
+
+
+
+        });
+  }
+
+  else if (name=="done") {
+    var id = (event.srcElement.id).replace("_donebutton","");
+    $.ajax({
+
+             type: "POST",
+              url: "{% url 'delivery_in_details' delivery_in.pk date|get_year date|get_month date|get_day %}",
+             data: {'content_id': id,'operation':'done','csrfmiddlewaretoken': '{{ csrf_token }}'},
+             dataType: "json",
+             success: function(response) {
+
+             selector = document.getElementById(response.block);
+             $(selector).css({'color':'green'});
+             $(selector).text("Done");
+             s = document.getElementById(response.rem1);
+             $(s).remove();
+             s = document.getElementById(response.rem2);
+             $(s).remove();
+              }
+
+        });
+  }
+   else if (name == "donerefunding") {
+    var id = (event.srcElement.id).replace("_donerefundingbutton","");
+    $.ajax({
+             type: "POST",
+            url: "{% url 'delivery_in_details' delivery_in.pk date|get_year date|get_month date|get_day %}",
+             data: {'content_id':id ,'operation':'done_refunding','csrfmiddlewaretoken': '{{ csrf_token }}'},
+             dataType: "json",
+             success: function(response) {
+              var s=response.content_id + "_postponebutton";
+              selector=document.getElementById(s);
+              $(selector).remove();
+              selector=document.getElementById(response.Id);
+              $(selector).remove();
+              selector=document.getElementById(response.statusid);
+              $(selector).attr({style:'color:green'});
+              selector.innerText= "Done Refunding";
+
+              }
+        });
+  }
+
+}
+</script>
+
+{% endblock %}

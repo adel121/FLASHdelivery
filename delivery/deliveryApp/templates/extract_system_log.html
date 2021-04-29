@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+{% block title %} FST - EXTRACT SysLog {% endblock %}
+{% block content %}
+{% load deliverytags %}
+<br><br>
+<form action="{% url 'request_extract_system_log' %}" method="POST" class="container jumbotron">
+<h3> Date </h3>
+{% csrf_token %}
+<input type="date" id="date" name="date" required class="form-control"><br>
+<input type="submit" class="btn btn-primary" value="Extract All Data" >
+</form>
+
+{% endblock %}

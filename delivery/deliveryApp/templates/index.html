@@ -1,0 +1,357 @@
+{% extends "base.html" %}
+{% load deliverytags %}
+{% load static %}
+{% block title %} FST - INDEX{% endblock %}
+{% block content %}
+{% if user.is_authenticated %}
+
+<div style="color:black;background: #424ef5; padding:5px; margin-bottom:15px; font-size:20px; width:100% ;  margin-top:15px ; margin-right:20px">
+{% if result != 'nothing' %}
+<h1 style="color:white; text-align:center">
+{{result}}
+</h1>
+{% endif %}
+<p align="right" style="color:white">total # of displayed bills:&nbsp{{bills.paginator.count}}&nbspbills
+<br>
+total # of displayed pages:&nbsp{{pages}}&nbsppages
+
+{% if total <= 10000 %}
+<p align="right" style="color:yellow">Number of bills in the System: {{total}} bills</p>
+{% else %}
+<p align="center" style="color:red; background:white"><i><b>Number of bills in the System: {{total}} bills</b></i><br>
+A System Backup is Needed!!! Contact The Administrator!
+
+
+</p>
+{% endif %}
+
+</p>
+
+    <form style="text-align:right" method="POST" class="form-group">
+    {% csrf_token %}
+<div class="ui action input">
+  <input name="requested_id" type="text" placeholder="Search...">
+  <button class="ui button" type="submit">Search</button>
+</div>
+</form>
+
+<ol class="list-group">
+	<form class="form-group" style="align:center" action="{% url 'index' category %}" method="POST">
+	{% csrf_token %}
+   <div style="color:white"> <h2 >Filter Section: </h2> </div>
+<label for="requested_date" style="color:white;"><h2>Date In </h2></label>
+
+    <input class="form-control" id="requested_date"  type="date" name="requested_date" {% if date == '0-0-0' %} value="No Date Specified" {% else %} value={{date|to_str}} {% endif %}>
+    <hr>
+
+     <label for="requested_phone" style="color:white;"><h3 >Customer Phone  <h5> hint:(To view all bills with all phone numbers, enter: 0)</h5> </h3> </label>
+    <input class="form-control" id="requested_phone" type="text" name="requested_phone" {% if phone == '0' %} value="All Phone Numbers" {% else %} value={{phone}} {% endif %}>
+    <hr>
+
+    <input style="align-self: center" type="submit" class="btn btn-light" value="Filter By Date In and Phone Number">
+
+</form>
+
+{% if bills.has_other_pages %}
+
+  	<form method="POST" style="text-align: center" class="form-group" action="{% url 'index' category date|get_year date|get_month date|get_day phone %}">
+    {% csrf_token %}
+	<select class="ui search dropdown" name="page">
+
+    {% for i in bills.paginator.page_range %}
+      {% if bills.number == i %}
+       <option selected value="{{i}}"><span class="sr-only">Page: {{i}}</span></option>
+
+      {% else %}
+      <option  value="{{i}}">Page: {{i}}</span></option>
+
+      {% endif %}
+    {% endfor %}
+    </select> &nbsp &nbsp
+    <button type="submit" value="Navigate" class="btn btn-light">Change Page</button>
+</form>
+    <script type="text/javascript">
+					jQuery('.ui.search.dropdown')
+  					.dropdown();
+  					</script>
+
+{% endif %}
+<p align="right"><a href="{% url 'index'  %}"><button  class="btn btn-light">View Unfinished Bills</button> </a></p>
+<h3 style="color:white; margin-left:25%">View:
+<a href="{% url 'index' 'all' date|get_year date|get_month date|get_day phone %}"> <button type="button" class="btn btn-light">All</button></a>
+<a href="{% url 'index' 'pending' date|get_year date|get_month date|get_day phone %}"> <button type="button" class="btn btn-light">Pending</button></a>
+<a href="{% url 'index' 'sent' date|get_year date|get_month date|get_day phone %}"> <button type="button" class="btn btn-light">Sent</button></a>
+<a href="{% url 'index' 'paid' date|get_year date|get_month date|get_day  phone%}"> <button type="button" class="btn btn-light">Paid</button></a>
+<hr>
+</h3>
+<ul>
+	<style type="text/css">    #customers {
+            font-family: Arial, Helvetica, sans-serif;
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        #customers td, #customers th {
+           bottom-border: 1px solid #ddd;
+            padding: 8px;
+        }
+
+        #customers tr:nth-child(even){background-color: #f2f2f2;}
+
+        #customers tr:hover {background-color: #ddd;}
+
+        #customers th {
+            padding-top: 12px;
+            padding-bottom: 12px;
+            text-align: left;
+            background-color: #424ef5;
+            color: white;
+        }
+h1{
+  text-align:center;
+}
+span{
+  font-size: 200%;
+  line-height: 80%;
+}
+</style>
+</div>
+<div >
+<table id="customers" style="text-align: center">
+        <thead><!--heading -->
+            <tr style="text-align: center"><!--for row-->
+                <th>ID</th><!--column in bold-->
+                <th> Date In </th>
+                <th>Supplier</th>
+                <th>Customer</th>
+                <th>Address</th>
+                <th>Order Amount</th>
+                <th> Delivery Price </th>
+                <th> Choose Driver Out</th>
+                <th> Status </th>
+                <th> Actions </th>
+            </tr>
+        </thead>
+       
+      
+
+{% for sts in bills %}
+
+                
+
+
+
+					 {% if sts.Status == 'refunded' %}
+					 <tr name="{{sts.Bill_Id}}_item"  style="text-align: center; background: yellow">
+
+					 <td> <a
+						href="{% url 'bill_details' sts.Bill_Id sts.Status  %}"
+						> {{sts.Bill_Id}}  </a> </td> 
+					<td >{{sts.Date_In}} </td>
+					<td> {{sts.client}} </td>
+					<td> {{sts.endClientName}}</td>
+					<td> {{sts.address}} </td>
+					<td> {{sts.Product_cost}} L.L</td>
+					<td> {{sts.Delivery_cost}} L.L</td>
+					<td> --------- </td>
+					<td id="{{sts.Bill_Id}}_status"> {{sts.Status}} |{% if sts.Done_Refunding %} <h5 style="color:green">Done Refunding</h5>
+					{% else %}
+					<h5 id="{{sts.Bill_Id}}_notdonerefunding" style="color:red">Refunding Not Done Yet</h5>  </td>{% endif %}
+					<td> ---------  </td>
+
+					</tr>
+
+					<!--<a onclick="behave()" name="{{sts.Bill_Id}}" class="done_refunding" ><button type="button" id="{{sts.Bill_Id}}_donerefundingbutton" name="donerefunding" class="btn btn-danger">Done Refunding?</button></a>-->
+				
+					
+					
+
+					 {% else %}
+					  <tr name="{{sts.Bill_Id}}_item"  style="text-align: center;">
+
+					 <td> <a
+						href="{% url 'bill_details' sts.Bill_Id sts.Status  %}"
+						> {{sts.Bill_Id}}  </a> </td> 
+					<td >{{sts.Date_In}} </td>
+					<td> {{sts.client}} </td>
+					<td> {{sts.endClientName}}</td>
+					<td> {{sts.address}} </td>
+					<td> {{sts.Product_cost}} L.L</td>
+					<td> {{sts.Delivery_cost}} L.L</td>
+					<td> {% if sts.Status == "pending"  %}
+					<div id="deliveryout_{{sts.Bill_Id}}">
+					Choose Driver Out:<br>
+							<select class="ui search dropdown"   id="selectdeliveryout_{{sts.Bill_Id}}" >
+								<option value="intro" selected disabled hidden>Search by typing the name</option>
+							{% for deliveryout in deliveryouts %}
+ 						  {% if deliveryout.Name != 'Default' %}
+ 						 <option  value="{{deliveryout.pk}}">{{deliveryout.Name}}</option>
+                        {% endif %}
+ 					 {% endfor %}
+					</select><br><br></div>
+					<script type="text/javascript">
+					jQuery('.ui.search.dropdown')
+  					.dropdown();
+  					</script>
+  					{% else %}
+  					--------- 
+  					{% endif %}
+					
+				
+</td>
+					<td id="{{sts.Bill_Id}}_status"> {{sts.Status}} 
+
+
+					{% if sts.Done %}
+					<h5 name="{{sts.Bill_Id}}_done" style="color: green"> Done </h5>
+				</td> 
+				    {% else %}
+				    <h5 id="{{sts.Bill_Id}}_notdone" style="color: red"> Not Done Yet </h5>
+				</td>
+				{% endif %}
+
+				<td> 
+					{% if sts.Status == 'pending' %}
+						<a onclick="behave()" name="{{sts.Bill_Id}}" class="sent" id="sent_{{sts.Bill_Id}}"> <button type="button" name="sent" id="{{sts.Bill_Id}}_sentbutton" class="btn btn-warning">Sent? </button></a> 
+
+						{% elif sts.Status == "sent" %}
+						<a name="{{sts.Bill_Id}}" onclick="behave()" class="paid" id="paid_{{sts.Bill_Id}}"> <button id="{{sts.Bill_Id}}_paidbutton" type="button" class="btn btn-info" name="paid">Paid? </button></a>
+						{% endif %}
+			{% if not sts.Done %}
+					<a onclick="behave()" name="{{sts.Bill_Id}}" class="done"  > <button id="{{sts.Bill_Id}}_donebutton" type="button" name="done" class="btn btn-danger">Done?<br></button></a>
+					{% else %}
+					<span id="done_{{sts.Bill_Id}}"></span>
+					{% endif %}
+				</td>
+				{% endif %}
+			
+					</tr>
+				
+
+
+{% endfor %}
+
+</table>
+</div>
+
+
+
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+<script>
+// AJAX CALL
+
+
+function behave() {
+	var name=$(event.srcElement).attr("name");
+	if (name=="sent") {
+		var id = (event.srcElement.id).replace("_sentbutton","");
+		var e = document.getElementById("selectdeliveryout_"+id);
+		var strUser = e.value;
+		if (strUser == "intro") {
+		alert("You have to choose a driver out");
+		return 0
+		}
+
+		$.ajax({
+             type: "POST",
+             url: "{% url 'index' category date|get_year date|get_month date|get_day phone%}",
+             data: {'content_id': id,'operation':'sent','deliveryout':strUser,'csrfmiddlewaretoken': '{{ csrf_token }}'},
+             dataType: "json",
+             success: function(response) {
+
+            	selector=document.getElementById(response.Id);
+            	$(selector).text("Paid?");
+            	$(selector).attr({class:'btn btn-info'});
+            	selector=document.getElementById(response.statusid);
+            	selector.innerText= "Status: sent";
+            	selector=document.getElementById("sent_"+response.billid);
+      			$(selector).attr("class", "paid");
+
+    			$(selector).attr("id","paid_"+response.billid);
+    			selector=document.getElementById(response.billid+"_sentbutton");
+    			$(selector).attr("id",response.billid+"_paidbutton");
+    			$(selector).attr("name", "paid");
+    			selector=document.getElementById("deliveryout_"+id);
+    			$(selector).remove();
+
+              }
+
+
+
+        });
+
+		}
+
+	else if (name=="paid") {
+		var id = (event.srcElement.id).replace("_paidbutton","");
+		$.ajax({
+             type: "POST",
+             url: "{% url 'index' category date|get_year date|get_month date|get_day phone %}",
+             data: {'content_id': id,'operation':'paid','csrfmiddlewaretoken': '{{ csrf_token }}'},
+             dataType: "json",
+             success: function(response) {
+
+            	selector=document.getElementById(response.Id);
+            	$(selector).text("Bill Already Paid");
+            	$(selector).attr({class:'btn btn-success'});
+            	selector=document.getElementById(response.statusid);
+            	selector.innerText= "Status: paid";
+            	selector=document.getElementById("paid_"+response.billid);
+      			$(selector).attr("class", "noclass");
+    			$(selector).attr("id","");
+    			selector=document.getElementById(response.billid+"_paidbutton");
+    			$(selector).attr("id","");
+    			$(selector).remove();
+    			//selector=document.getElementById("done_"+response.billid);
+    			//selector.innerHTML= '<a onclick="behave()" name="'+response.billid+'" class="done"  > <button name="done" id="'+response.billid+'_donebutton" type="button" class="btn btn-danger">Done?<br></button></a>';
+              }
+
+
+
+        });
+	}
+
+	else if (name=="done") {
+		var id = (event.srcElement.id).replace("_donebutton","");
+		$.ajax({
+
+             type: "POST",
+             url: "{% url 'index' category date|get_year date|get_month date|get_day phone %}",
+             data: {'content_id': id,'operation':'done','csrfmiddlewaretoken': '{{ csrf_token }}'},
+             dataType: "json",
+             success: function(response) {
+
+           	 
+              }
+
+        });
+	}
+	else if (name == "donerefunding") {
+		var id = (event.srcElement.id).replace("_donerefundingbutton","");
+		$.ajax({
+             type: "POST",
+             url: "{% url 'index' category date|get_year date|get_month date|get_day phone%}",
+             data: {'content_id':id ,'operation':'done_refunding','csrfmiddlewaretoken': '{{ csrf_token }}'},
+             dataType: "json",
+             success: function(response) {
+             	var s=response.content_id + "_postponebutton";
+             	selector=document.getElementById(s);
+             	$(selector).remove();
+            	selector=document.getElementById(response.Id);
+            	$(selector).remove();
+            	selector=document.getElementById(response.statusid);
+            	$(selector).attr({style:'color:green'});
+            	selector.innerText= "Done Refunding";
+
+              }
+        });
+	}
+
+}
+</script>
+</div>
+
+{% endif %}
+{% endblock %}

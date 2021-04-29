@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+{% block title %} FST - ADD SUPPLIER  {% endblock %}
+{% block content %}
+
+<form class="jumbotron container form-group" action="add_client" method="post">
+	<h2>Adding New Supplier</h2>
+	{% if message != 'nothing' %} *{{message}} {% endif %}<br>
+    {% csrf_token %}
+    {{ form }}
+    <hr>
+    <input type="submit" class="btn btn-primary" value="Add Supplier">
+</form>
+{% endblock %}

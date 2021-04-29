@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+{% load deliverytags %}
+{% block title %} FST - BILL DETAILS{% endblock %}
+{% block content %}
+<div style="margin-top: 10px">
+<div class="jumbotron container" style="text-align: center;">
+	<h4>Bill ID:  {{ bill.Bill_Id}} </h4><hr>
+	<h4>Date In:  {{bill.Date_In|to_date}} </h4> <hr>
+	<h4>Date Sent: {% if bill.Status != 'pending' %} {{bill.Date_Sent|to_date}} {% else %} Not Sent Yet {% endif %}</h4><hr>
+	<!--<h4>Processing Date: {{bill.Date|to_date}}</h4><hr>-->
+	<h4>Address:  {{bill.address}} </h4> <hr>
+	{% if bill.directions != "" %} <h4> Directions:  {{bill.directions}}</h4><hr>{% endif %}
+	<h4>Supplier:  {{bill.client}}</h4> <hr>
+	
+	{% if bill.Status != "pending" %}<h4>Driver Out:  {{bill.delivery_out.Name}}</h4> <hr>{% endif %}
+	<h4>Customer Name:  {{bill.endClientName}}</h4> <hr>
+	<h4>Customer Number:  {{bill.endClientNumber}}</h4> <hr>
+	<h4>Product Cost:  {{bill.Product_cost | format_cost}} {% if bill.Currency != 'usd' %} L.L {% else %} $ {% endif %}</h4> <hr>
+	<h4>Delivery Cost:  {{bill.Delivery_cost | format_cost}} L.L</h4> <hr>
+	<h4>Status:  {{bill.Status}}
+	    {% if bill.Status == 'paid' %}
+	        {% if bill.Done %} - Finalized With Client
+	        {% else %} - Not Finalized With Client Yet
+	        {% endif %}
+	    {% endif %}
+	    {% if bill.Status == 'refunded' %} -
+		{% if bill.Done_Refunding %} Refunding Finshed
+		{% else %} Refunding Not Finalized yet
+		{% endif %} {% endif %}
+	</h4><hr>
+	
+
+
+
+<a href="{% url 'updatebill' bill.pk %}"><button style="width:100%" class="btn btn-primary">
+Edit Bill</button></a>
+<hr>
+<a href="{% url 'deletebill' bill.pk %}"><button style="width:100%" class="btn btn-danger">
+Delete Bill</button></a>
+</div></div>
+{% endblock %}

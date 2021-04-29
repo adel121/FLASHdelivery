@@ -1,0 +1,8 @@
+Added features:
+
+1- Search by id on home page
+2- Changed default delivery out to an inaccessible instance <Default:0>
+3- Added "Generate System Log"
+4- Altered cost fields in bill entity to handle negative costs
+5- Added pagination to home page / 5 bill per page
+6- Added General Info to home page (# of pages, # of bills displayed, # of bills in system)

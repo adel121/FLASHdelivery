@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+{% block title %} FST - ADD BILL {% endblock %}
+
+{% block content %}
+
+<form class="jumbotron container form-group" action="add_bill" method="post">
+    <h1 style="color:red; text-align:center">{{message}}</h1>
+	<h2>Adding New Bill</h2><hr>
+    {% csrf_token %}
+    <label for="Id">Bill Id:</label>
+    <input type="text" class="form-control" id="Id" maxlength="10" name="Id" required>
+
+     <label for="address">Address:</label>
+    <input type="text" class="form-control" id="address" maxlength="1000" name="address" required>
+
+       
+<label for="client">Supplier:</label>
+  					<select class="ui search dropdown fluid" id="client" name="client" required>
+			<option value="intro" selected disabled hidden>Search by typing the name</option>
+					{% for client in clients %}
+
+ 					 <option  value="{{client.pk}}">{{client.Company}}</option>
+
+ 					 {% endfor %}
+					</select>
+					<script type="text/javascript">
+					jQuery('.ui.search.dropdown')
+  					.dropdown();
+  					</script>
+
+
+
+ <label for="endClientName"></label>Customer Name:</label>
+    <input type="text" class="form-control" id="endClientName" maxlength="1000" name="endClientName" required>
+
+  <label for="endClientNumber">Customer Number:</label>
+    <input type="text" class="form-control" id="endClientNumber" maxlength="10000" name="endClientNumber" required>
+
+
+
+        <label for="Currency">Currency</label>
+        <select class="form-control" name="Currency" id="Currency">
+            
+            <option value="LBP">LBP</option>
+           
+        </select>
+        <label for="Product_cost">Order Amount </label>
+        <input required type="number" id="Product_cost" name="Product_cost" class="form-control">
+        <label for="Delivery_cost">Delivery Charge in LBP</label>
+        <input required type="number" id="Delivery_cost" name="Delivery_cost" class="form-control">
+       
+    <hr>
+    <input type="submit" class="btn btn-primary" value="Add Bill">
+</form>
+{% endblock %}
